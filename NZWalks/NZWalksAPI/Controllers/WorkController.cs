@@ -68,6 +68,7 @@ namespace NZWalksAPI.Controllers
             WorkerNames[index] = updatedWorker;
 
 
+
             var result = new WorkerUpdateModel()
             {
                 OldName = name,
