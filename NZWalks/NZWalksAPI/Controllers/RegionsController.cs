@@ -140,7 +140,6 @@ namespace NZWalksAPI.Controllers
             // check if region exists
             var regionDomainModel = dbContext.Regions.FirstOrDefault(x => x.Id == id);
 
-
             if (regionDomainModel == null)
             {
                 return NotFound();
@@ -163,9 +162,38 @@ namespace NZWalksAPI.Controllers
                 RegionImageUrl = regionDomainModel.RegionImageUrl
             };
 
-
-
             return Ok(regionDto); // we never pass the Domain Model to the client only the DTO
+        }
+
+        // Delete region
+        // Delete : https://localhost:portnumber/api/regions/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var regionDomainModel = dbContext.Regions.FirstOrDefault(x => x.Id == id);
+
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            dbContext.Regions.Remove(regionDomainModel);
+            dbContext.SaveChanges();
+
+            // return deleted Region back
+            // Map Domain Model to DTO
+            var regionDto = new Region
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl
+            };
+
+
+
+            return Ok(regionDto);
         }
 
     }
