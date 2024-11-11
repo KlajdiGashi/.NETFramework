@@ -20,9 +20,6 @@ namespace NZWalksAPI.Controllers
             this.dbContext = dbContext;
         }
 
-
-
-
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -52,6 +49,21 @@ namespace NZWalksAPI.Controllers
             */
 
             return Ok(regions);
+        }
+        // Get single region by id
+        [HttpGet]
+        [Route("{id:Guid}")]
+        public IActionResult GetById([FromRoute] Guid id) 
+        {
+            // var region = dbContext.Regions.Find(id); // find can only be used with ID
+
+            var region = dbContext.Regions.FirstOrDefault(x => x.Id == id); // getting the x so that the Id we pass to match the Id in the database
+
+            if (region == null)
+            {
+                return NotFound();
+            }
+            return Ok(region);
         }
 
     }
