@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using NZWalksAPI.Data;
 using NZWalksAPI.Models.Domain;
+using System.Globalization;
 
 namespace NZWalksAPI.Repositories
 {
@@ -35,7 +36,7 @@ namespace NZWalksAPI.Repositories
             return existingWalk;
         }
 
-        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null)
+        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null,string? sortBy = null, bool isAscending = true)
         {
             var walks = dbContext.Walks.Include("Difficulty").Include("Region").AsQueryable();
 
@@ -49,6 +50,18 @@ namespace NZWalksAPI.Repositories
             
             }
 
+            // Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false) 
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAscending ? walks.OrderBy(x => x.Name) : walks.OrderByDescending(x => x.Name);
+                }
+                else if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = isAscending ? walks.OrderBy(x => x.LengthInKm) : walks.OrderByDescending(x => x.LengthInKm);
+                }
+            }
 
             return await walks.ToListAsync();
             
