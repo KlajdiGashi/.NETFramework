@@ -9,7 +9,7 @@ namespace NZWalksAPI.Models.DTO
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(200, ErrorMessage = "Description has to be a maximum of 200 characters")]
+        [MaxLength(1000, ErrorMessage = "Description has to be a maximum of 1000 characters")]
         public string Description { get; set; }
 
         [Required]
