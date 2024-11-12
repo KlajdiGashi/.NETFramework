@@ -5,6 +5,7 @@ using NZWalksAPI.Mapping;
 using NZWalksAPI.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +22,27 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectio
 builder.Services.AddDbContext<NzWalksAuthDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthConnectionString")));
 
-
-
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
+    .AddEntityFrameworkStores<NzWalksAuthDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options => 
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+});
+
+// Password Configuration, we can make it however we want it here.
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -40,6 +56,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     });
+
+// Validations have been added for the Authentication so they get saved correctly to the db
    
 
 var app = builder.Build();
