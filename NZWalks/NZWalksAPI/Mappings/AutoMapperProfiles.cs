@@ -18,6 +18,7 @@ namespace NZWalksAPI.Mapping
             CreateMap<AddWalkRequestDto, Walk>().ReverseMap();
             CreateMap<Walk, WalkDto>().ReverseMap();
             CreateMap<Difficulty,DifficultyDto>().ReverseMap();
+            CreateMap<UpdateWalkRequestDto, Walk>().ReverseMap();
             /* 
              so basically Mapper is saying to automatically connect the variables with the same names on the DTO and the Region Domain where then the data is sent to the Server/Database.
             If we say Region,RegionDto. basically were saying connect the same names with the same variables, just as we did earlier
