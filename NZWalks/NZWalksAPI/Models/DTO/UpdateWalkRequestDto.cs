@@ -11,6 +11,7 @@ namespace NZWalksAPI.Models.DTO
         [MaxLength(200, ErrorMessage = "Description has to be a maximum of 200 characters")
         public string Description { get; set; }
         [Required]
+        [Range(0,50)]
         public double LengthInKm { get; set; }
         public string? WalkImageUrl { get; set; } //this is a nullable variable as well
 

@@ -13,6 +13,7 @@ namespace NZWalksAPI.Models.DTO
         public string Description { get; set; }
 
         [Required]
+        [Range(0,50)]
         public double LengthInKm { get; set; }
 
         public string? WalkImageUrl { get; set; } //this is a nullable variable as well
