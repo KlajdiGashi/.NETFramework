@@ -10,6 +10,9 @@ using Microsoft.OpenApi.Models;
 using System.Security.Cryptography.Xml;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
+using Microsoft.AspNetCore.Diagnostics;
+using NZWalksAPI.Middleware;
+using ExceptionHandlerMiddleware = NZWalksAPI.Middleware.ExceptionHandlerMiddleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -115,8 +118,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
