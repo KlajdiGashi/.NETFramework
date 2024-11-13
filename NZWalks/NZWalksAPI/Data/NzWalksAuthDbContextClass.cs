@@ -8,7 +8,6 @@ namespace NZWalksAPI.Data
     {
         public NzWalksAuthDbContext(DbContextOptions<NzWalksAuthDbContext> options) :base(options)
         {
-
             
         }
 
