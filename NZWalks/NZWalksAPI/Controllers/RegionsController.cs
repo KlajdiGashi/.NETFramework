@@ -40,18 +40,26 @@ namespace NZWalksAPI.Controllers
         // [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
-            logger.LogInformation("GetAllRegions Action Method was invoked");
+            try
+            {
+                logger.LogInformation("GetAllRegions Action Method was invoked");
 
-            logger.LogWarning("This is a warning log!");
+                logger.LogWarning("This is a warning log!");
 
-            logger.LogError("This is an error log!");
+                logger.LogError("This is an error log!");
 
-            var regionsDomain = await regionRepository.GetAllAsync();
+                var regionsDomain = await regionRepository.GetAllAsync();
 
-            var regionsDto = mapper.Map<List<RegionDto>>(regionsDomain);
+                var regionsDto = mapper.Map<List<RegionDto>>(regionsDomain);
 
-            logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regionsDomain)}");
-            return Ok(regionsDto);
+                logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regionsDomain)}");
+                return Ok(regionsDto);
+            }
+             catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                throw;
+            }
 
         }
 
