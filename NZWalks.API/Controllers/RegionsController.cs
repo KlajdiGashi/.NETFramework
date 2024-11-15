@@ -33,7 +33,7 @@ namespace NZWalks.API.Controllers
         // GET ALL REGIONS
         // GET: https://localhost:portnumber/api/regions
         [HttpGet]
-        //[Authorize(Roles = "Reader")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
             // Get Data From Database - Domain models
@@ -48,7 +48,7 @@ namespace NZWalks.API.Controllers
         // GET: https://localhost:portnumber/api/regions/{id}
         [HttpGet]
         [Route("{id:Guid}")]
-        //[Authorize(Roles = "Reader")]
+        [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             //var region = dbContext.Regions.Find(id);
@@ -69,7 +69,7 @@ namespace NZWalks.API.Controllers
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
         [ValidateModel]
-        //[Authorize(Roles = "Writer")]
+        //uthorize(Roles = "Writer")]
         public async Task<IActionResult> Create([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
             // Map or Convert DTO to Domain Model
@@ -90,7 +90,7 @@ namespace NZWalks.API.Controllers
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]
-        //[Authorize(Roles = "Writer")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
 
