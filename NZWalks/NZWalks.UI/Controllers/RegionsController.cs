@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NZWalks.UI.Models;
 using NZWalks.UI.Models.DTO;
+using System.Reflection;
 using System.Text.Json;
 using static System.Net.WebRequestMethods;
 
@@ -19,8 +20,7 @@ namespace NZWalks.UI.Controllers
         public async Task<IActionResult> Index()
         {
             List<RegionDto> response = new List<RegionDto>();
-            try
-            {
+
                 // Get All Regions From Web API
                 var client = httpClientFactory.CreateClient();
  
@@ -29,13 +29,6 @@ namespace NZWalks.UI.Controllers
                 httpResponseMessage.EnsureSuccessStatusCode();
 
                 response.AddRange(await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<RegionDto>>());
-            }
-            catch (Exception ex)
-            {
-
-                // Log the exception
-            }
-
             return View(response);
         }
 
@@ -72,6 +65,52 @@ namespace NZWalks.UI.Controllers
             {
                 return View();
             }
+
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var client = httpClientFactory.CreateClient();
+
+            var response = await client.GetFromJsonAsync<RegionDto>($"https://localhost:7287/api/regions/{id.ToString()}");
+            
+            if (response is not null)
+            {
+                return View(response);
+            }
+
+        
+            return View();
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> Edit(RegionDto request)
+        {
+            var client = httpClientFactory.CreateClient();
+
+
+            var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Put,
+                RequestUri = new Uri($"https://localhost:7287/api/regions/{request.Id}"),
+                Content = new StringContent(JsonSerializer.Serialize(request), System.Text.Encoding.UTF8, "application/json")
+            };
+
+            var httpResponseMessage = await client.SendAsync(httpRequestMessage);
+            httpResponseMessage.EnsureSuccessStatusCode() ;
+
+
+            var response = await httpRequestMessage.Content.ReadFromJsonAsync<RegionDto>();
+
+            if (response is not null)
+            {
+                return RedirectToAction("Edit", "Regions");
+            }
+
+            return View();
 
         }
     }
